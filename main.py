@@ -9,17 +9,15 @@ app = FastAPI()
 
 class LegalAddress(BaseModel):
     city: str
+    district: str
     street: str
-    house_number: int
-    apartment_number: int
-    entrance_number: int
-    floor: int
+    house_number: str
 
 
 @app.post("/api/v1/geocoder/")
 async def get_geocoordinates(address: LegalAddress):
     return {
-        "address": address,
+        "address": address.model_dump(),
         "coordinates": {"lat": randint(-90, 90), "lng": randint(-180, 180)}
     }
 
