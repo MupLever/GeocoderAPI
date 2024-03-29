@@ -6,8 +6,8 @@ from urllib.parse import quote
 import uvicorn
 from fastapi import FastAPI
 
-from logger import logger
 from schemas import LegalAddress
+from configs.logger import logger
 from configs.params import params
 from configs.headers import headers
 
@@ -26,7 +26,7 @@ async def get_geocoordinates(address: LegalAddress):
         response = requests.get(url, headers=headers).json()
         coords = response.get("results")[0].get("pos")
         lng, lat = coords.split(",")
-        logger.info(f"Received from Yandex API {lng=} {lat=}")
+        logger.info(f"Received from the Yandex API {lng=} {lat=}")
     except JSONDecodeError:
         lat, lng = round(random() * 55, 6), round(random() * 37, 6)
     except AttributeError:
@@ -36,7 +36,7 @@ async def get_geocoordinates(address: LegalAddress):
 
     return {
         "address": address.model_dump(),
-        "coordinates": {"lat": lat, "lng": lng}
+        "coordinates": {"lat": str(lat), "lng": str(lng)}
     }
 
 
